@@ -24,7 +24,7 @@ const ReligionSidebar = ({
       <div className="space-y-3">
         {religions.map(religion => <div key={religion} className="flex items-center space-x-2">
             <Checkbox id={religion} checked={selectedReligions.includes(religion)} onCheckedChange={checked => handleReligionChange(religion, checked as boolean)} />
-            <label htmlFor={religion} className="text-sm font-medium text-gray-700 cursor-pointer">
+            <label htmlFor={religion} className="text-sm font-medium text-gray-700 cursor-pointer mx-[9px] px-[2px] py-px my-0 bg-slate-50">
               {religion}
             </label>
           </div>)}
