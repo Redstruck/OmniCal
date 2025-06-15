@@ -1,4 +1,3 @@
-
 import { Search, Bell, User, Calendar as CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -8,8 +7,12 @@ const Navigation = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center shadow-lg">
-              <CalendarIcon className="text-white h-5 w-5" />
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
+              <img 
+                src="/lovable-uploads/1b93c5df-355c-4fe4-bfd6-b9054c785489.png" 
+                alt="Religious Calendar Logo" 
+                className="w-full h-full object-cover"
+              />
             </div>
             <div>
               <span className="font-bold text-xl text-gradient">Calendar</span>
