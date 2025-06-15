@@ -1,10 +1,13 @@
+
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
+
 interface ReligionSidebarProps {
   selectedReligions: string[];
   onReligionChange: (religions: string[]) => void;
 }
+
 const ReligionSidebar = ({
   selectedReligions,
   onReligionChange
@@ -50,6 +53,7 @@ const ReligionSidebar = ({
     icon: "✡️",
     description: "Jewish holidays & traditions"
   }];
+
   const handleReligionChange = (religion: string, checked: boolean) => {
     let updatedReligions;
     if (checked) {
@@ -59,6 +63,7 @@ const ReligionSidebar = ({
     }
     onReligionChange(updatedReligions);
   };
+
   return <div className="w-80 bg-white border-r border-gray-200 shadow-sm">
       <div className="p-6 border-b border-gray-100">
         <div className="flex items-center gap-3 mb-2">
@@ -74,19 +79,21 @@ const ReligionSidebar = ({
         <div className="space-y-4">
           {religions.map(religion => {
           const isSelected = selectedReligions.includes(religion.name);
-          return <div key={religion.name} className={`group relative rounded-xl border-2 transition-all duration-200 hover:shadow-md ${isSelected ? `${religion.lightColor} ${religion.borderColor} shadow-sm` : 'bg-gray-50 border-gray-200 hover:bg-gray-100'}`}>
-                <div className="p-4">
+          return <div key={religion.name} className={`group relative rounded-xl border-2 transition-all duration-200 hover:shadow-md ${isSelected ? `${religion.lightColor} ${religion.borderColor} shadow-sm` : `${religion.lightColor} ${religion.borderColor} opacity-60 hover:opacity-100`}`}>
+                <div className={`p-4 ${religion.lightColor} rounded-xl`}>
                   <div className="flex items-start space-x-3">
                     <div className="flex items-center space-x-3 flex-1">
                       <Checkbox id={religion.name} checked={isSelected} onCheckedChange={checked => handleReligionChange(religion.name, checked as boolean)} className="mt-1" />
                       <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          
-                          <label htmlFor={religion.name} className={`font-semibold cursor-pointer transition-colors ${isSelected ? religion.textColor : 'text-gray-700'}`}>
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-xl">{religion.icon}</span>
+                          <label htmlFor={religion.name} className={`font-semibold cursor-pointer transition-colors ${religion.textColor}`}>
                             {religion.name}
                           </label>
                         </div>
-                        
+                        <p className={`text-sm ${religion.textColor} opacity-80`}>
+                          {religion.description}
+                        </p>
                       </div>
                     </div>
                     <div className="flex flex-col items-center gap-1">
@@ -121,4 +128,5 @@ const ReligionSidebar = ({
       </div>
     </div>;
 };
+
 export default ReligionSidebar;
