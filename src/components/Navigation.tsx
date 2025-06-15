@@ -7,7 +7,7 @@ const Navigation = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-3">
-            <div className="w-16 h-16 rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
+            <div className="w-16 h-16 rounded-xl flex items-center justify-center overflow-hidden">
               <img 
                 src="/lovable-uploads/1b93c5df-355c-4fe4-bfd6-b9054c785489.png" 
                 alt="Religious Calendar Logo" 
