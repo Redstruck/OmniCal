@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,7 @@ const DualMonthCalendar = ({ selectedReligions }: DualMonthCalendarProps) => {
 
   // Get events for the current and next month
   const currentMonthStart = startOfMonth(currentDate);
+  const nextMonthDate = addMonths(currentDate, 1);
   const nextMonthEnd = endOfMonth(nextMonthDate);
   const allEvents = getAllEventsForDateRange(currentMonthStart, nextMonthEnd, selectedReligions, personalEvents);
 
