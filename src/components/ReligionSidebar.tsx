@@ -1,22 +1,15 @@
-
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
-
 interface ReligionSidebarProps {
   selectedReligions: string[];
   onReligionChange: (religions: string[]) => void;
 }
-
-const ReligionSidebar = ({ selectedReligions, onReligionChange }: ReligionSidebarProps) => {
-  const religions = [
-    "Christianity",
-    "Islam", 
-    "Hinduism",
-    "Buddhism",
-    "Judaism"
-  ];
-
+const ReligionSidebar = ({
+  selectedReligions,
+  onReligionChange
+}: ReligionSidebarProps) => {
+  const religions = ["Christianity", "Islam", "Hinduism", "Buddhism", "Judaism"];
   const handleReligionChange = (religion: string, checked: boolean) => {
     let updatedReligions;
     if (checked) {
@@ -26,32 +19,19 @@ const ReligionSidebar = ({ selectedReligions, onReligionChange }: ReligionSideba
     }
     onReligionChange(updatedReligions);
   };
-
-  return (
-    <div className="w-64 bg-gray-50 border-r border-gray-200 p-6">
-      <h3 className="font-semibold text-gray-900 mb-4">Religions</h3>
+  return <div className="w-64 bg-gray-50 border-r border-gray-200 p-6">
+      <h3 className="text-gray-900 mb-4 font-semibold text-3xl text-center">Religions</h3>
       <div className="space-y-3">
-        {religions.map((religion) => (
-          <div key={religion} className="flex items-center space-x-2">
-            <Checkbox
-              id={religion}
-              checked={selectedReligions.includes(religion)}
-              onCheckedChange={(checked) => handleReligionChange(religion, checked as boolean)}
-            />
-            <label
-              htmlFor={religion}
-              className="text-sm font-medium text-gray-700 cursor-pointer"
-            >
+        {religions.map(religion => <div key={religion} className="flex items-center space-x-2">
+            <Checkbox id={religion} checked={selectedReligions.includes(religion)} onCheckedChange={checked => handleReligionChange(religion, checked as boolean)} />
+            <label htmlFor={religion} className="text-sm font-medium text-gray-700 cursor-pointer">
               {religion}
             </label>
-          </div>
-        ))}
+          </div>)}
       </div>
       <Button variant="outline" className="w-full mt-6 text-gray-600">
         Add Religion
       </Button>
-    </div>
-  );
+    </div>;
 };
-
 export default ReligionSidebar;
