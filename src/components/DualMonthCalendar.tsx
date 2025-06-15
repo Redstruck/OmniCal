@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from "lucide-reac
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, getDay, isSameDay, isToday } from "date-fns";
-import { getAllEventsForDateRange, getEventsForDateRange, CalendarEvent, PersonalEvent } from "@/data/religiousEvents";
+import { getAllEventsForDateRange, getEventsForDateRange, CalendarEvent, PersonalEvent, ReligiousEvent, isDateInEvent, getEventDuration } from "@/data/religiousEvents";
 import AddEventDialog from "./AddEventDialog";
 
 interface DualMonthCalendarProps {
@@ -37,11 +37,31 @@ const DualMonthCalendar = ({ selectedReligions }: DualMonthCalendarProps) => {
   const today = new Date();
   const thirtyDaysFromNow = addMonths(today, 1);
   const upcomingEvents = getAllEventsForDateRange(today, thirtyDaysFromNow, selectedReligions, personalEvents)
-    .sort((a, b) => a.date.getTime() - b.date.getTime())
-    .slice(0, 5);
+    .sort((a, b) => {
+      const aDate = a.type === "personal" ? a.date : (a as ReligiousEvent).startDate;
+      const bDate = b.type === "personal" ? b.date : (b as ReligiousEvent).startDate;
+      return aDate.getTime() - bDate.getTime();
+    })
+    .slice(0, 8);
 
   const hasEventOnDate = (date: Date): boolean => {
-    return allEvents.some(event => isSameDay(event.date, date));
+    return allEvents.some(event => {
+      if (event.type === "personal") {
+        return isSameDay(event.date, date);
+      } else {
+        return isDateInEvent(date, event as ReligiousEvent);
+      }
+    });
+  };
+
+  const getEventsForDate = (date: Date): CalendarEvent[] => {
+    return allEvents.filter(event => {
+      if (event.type === "personal") {
+        return isSameDay(event.date, date);
+      } else {
+        return isDateInEvent(date, event as ReligiousEvent);
+      }
+    });
   };
 
   const getEventTypeColor = (event: CalendarEvent): string => {
@@ -67,7 +87,7 @@ const DualMonthCalendar = ({ selectedReligions }: DualMonthCalendarProps) => {
   };
 
   const getCalendarDayColor = (date: Date): string => {
-    const dayEvents = allEvents.filter(event => isSameDay(event.date, date));
+    const dayEvents = getEventsForDate(date);
     if (dayEvents.length === 0) return "";
 
     const hasPersonalEvent = dayEvents.some(event => event.type === "personal");
@@ -97,6 +117,20 @@ const DualMonthCalendar = ({ selectedReligions }: DualMonthCalendarProps) => {
     return "";
   };
 
+  const getEventDateDisplay = (event: CalendarEvent): string => {
+    if (event.type === "personal") {
+      return format(event.date, 'EEEE, MMMM d, yyyy');
+    } else {
+      const religEvent = event as ReligiousEvent;
+      if (religEvent.endDate) {
+        const duration = getEventDuration(religEvent);
+        return `${format(religEvent.startDate, 'MMM d')} - ${format(religEvent.endDate, 'MMM d, yyyy')} (${duration} days)`;
+      } else {
+        return format(religEvent.startDate, 'EEEE, MMMM d, yyyy');
+      }
+    }
+  };
+
   const renderCalendar = (date: Date) => {
     const monthStart = startOfMonth(date);
     const monthEnd = endOfMonth(date);
@@ -124,7 +158,7 @@ const DualMonthCalendar = ({ selectedReligions }: DualMonthCalendarProps) => {
           ))}
           {days.map((day) => {
             const hasEvent = hasEventOnDate(day);
-            const dayEvents = allEvents.filter(event => isSameDay(event.date, day));
+            const dayEvents = getEventsForDate(day);
             const isCurrentDay = isToday(day);
             const dayColorClass = getCalendarDayColor(day);
             
@@ -162,8 +196,8 @@ const DualMonthCalendar = ({ selectedReligions }: DualMonthCalendarProps) => {
                       )}
                     </button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-80 p-4 bg-white border shadow-xl rounded-xl animate-fade-in">
-                    <div className="space-y-3">
+                  <PopoverContent className="w-96 p-4 bg-white border shadow-xl rounded-xl animate-fade-in">
+                    <div className="space-y-4">
                       <div className="flex items-center gap-2 mb-3">
                         <CalendarIcon className="h-4 w-4 text-gray-500" />
                         <h4 className="font-semibold text-gray-900">
@@ -171,15 +205,36 @@ const DualMonthCalendar = ({ selectedReligions }: DualMonthCalendarProps) => {
                         </h4>
                       </div>
                       {dayEvents.map((event) => (
-                        <div key={event.id} className={`p-3 rounded-lg border ${getEventTypeColor(event)} hover-lift`}>
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="font-medium text-gray-800">{event.title}</span>
+                        <div key={event.id} className={`p-4 rounded-lg border ${getEventTypeColor(event)} hover-lift`}>
+                          <div className="flex items-start justify-between mb-2">
+                            <h5 className="font-semibold text-gray-800 text-lg">{event.title}</h5>
                             <span className="text-xs px-2 py-1 bg-white rounded-md font-medium text-gray-600 shadow-sm">
                               {event.type === "personal" ? "Personal" : (event as any).religion}
                             </span>
                           </div>
+                          <p className="text-sm text-gray-600 mb-2 font-medium">
+                            {getEventDateDisplay(event)}
+                          </p>
                           {event.description && (
-                            <p className="text-sm text-gray-600 mt-2">{event.description}</p>
+                            <p className="text-sm text-gray-600 mb-2">{event.description}</p>
+                          )}
+                          {event.type !== "personal" && (event as ReligiousEvent).significance && (
+                            <div className="mt-2 pt-2 border-t border-gray-200">
+                              <p className="text-xs text-gray-500 font-medium">Significance:</p>
+                              <p className="text-sm text-gray-600">{(event as ReligiousEvent).significance}</p>
+                            </div>
+                          )}
+                          {event.type !== "personal" && (event as ReligiousEvent).traditions && (
+                            <div className="mt-2">
+                              <p className="text-xs text-gray-500 font-medium mb-1">Traditions:</p>
+                              <div className="flex flex-wrap gap-1">
+                                {(event as ReligiousEvent).traditions?.slice(0, 4).map((tradition, idx) => (
+                                  <span key={idx} className="text-xs bg-white px-2 py-1 rounded-full text-gray-600 border">
+                                    {tradition}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
                           )}
                         </div>
                       ))}
@@ -215,8 +270,8 @@ const DualMonthCalendar = ({ selectedReligions }: DualMonthCalendarProps) => {
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div className="animate-fade-in">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Calendar Dashboard</h1>
-            <p className="text-gray-600">View events and festivals for your selected religions.</p>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Religious Calendar Dashboard</h1>
+            <p className="text-gray-600">Comprehensive view of religious festivals and observances from around the world.</p>
           </div>
           <AddEventDialog onAddEvent={handleAddEvent} />
         </div>
@@ -248,7 +303,7 @@ const DualMonthCalendar = ({ selectedReligions }: DualMonthCalendarProps) => {
 
         <div className="modern-card p-8">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-2xl font-bold text-gray-900">Upcoming Events</h3>
+            <h3 className="text-2xl font-bold text-gray-900">Upcoming Events & Festivals</h3>
             <div className="flex gap-6 text-sm">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
@@ -264,16 +319,45 @@ const DualMonthCalendar = ({ selectedReligions }: DualMonthCalendarProps) => {
           {upcomingEvents.length > 0 ? (
             <div className="grid gap-4">
               {upcomingEvents.map((event) => (
-                <div key={event.id} className={`p-4 rounded-xl border ${getEventTypeColor(event)} hover-lift`}>
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="font-semibold text-gray-900 text-lg">{event.title}</h4>
-                    <span className="text-xs px-3 py-1 bg-white rounded-full font-medium text-gray-600 shadow-sm">
-                      {event.type === "personal" ? "Personal" : (event as any).religion}
-                    </span>
+                <div key={event.id} className={`p-5 rounded-xl border ${getEventTypeColor(event)} hover-lift`}>
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1">
+                      <h4 className="font-bold text-gray-900 text-xl mb-1">{event.title}</h4>
+                      <p className="text-sm text-gray-600 font-medium mb-2">
+                        {getEventDateDisplay(event)}
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-end gap-2">
+                      <span className="text-xs px-3 py-1 bg-white rounded-full font-medium text-gray-600 shadow-sm">
+                        {event.type === "personal" ? "Personal" : (event as any).religion}
+                      </span>
+                      {event.type !== "personal" && (event as ReligiousEvent).endDate && (
+                        <span className="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full font-medium">
+                          {getEventDuration(event as ReligiousEvent)} days
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  <p className="text-sm text-gray-600 mb-2 font-medium">{format(event.date, 'EEEE, MMMM d, yyyy')}</p>
                   {event.description && (
-                    <p className="text-sm text-gray-500">{event.description}</p>
+                    <p className="text-sm text-gray-600 mb-3">{event.description}</p>
+                  )}
+                  {event.type !== "personal" && (event as ReligiousEvent).significance && (
+                    <div className="mb-3 p-3 bg-white/50 rounded-lg">
+                      <p className="text-xs text-gray-500 font-semibold mb-1">SIGNIFICANCE</p>
+                      <p className="text-sm text-gray-700">{(event as ReligiousEvent).significance}</p>
+                    </div>
+                  )}
+                  {event.type !== "personal" && (event as ReligiousEvent).traditions && (
+                    <div>
+                      <p className="text-xs text-gray-500 font-semibold mb-2">TRADITIONS</p>
+                      <div className="flex flex-wrap gap-2">
+                        {(event as ReligiousEvent).traditions?.slice(0, 6).map((tradition, idx) => (
+                          <span key={idx} className="text-xs bg-white px-3 py-1 rounded-full text-gray-600 border font-medium">
+                            {tradition}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   )}
                 </div>
               ))}
@@ -283,7 +367,7 @@ const DualMonthCalendar = ({ selectedReligions }: DualMonthCalendarProps) => {
               <CalendarIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
               <p className="text-gray-600 text-lg">
                 {selectedReligions.length === 0 
-                  ? "Select religions from the sidebar to see upcoming events or add your own personal events." 
+                  ? "Select religions from the sidebar to see upcoming festivals and observances, or add your own personal events." 
                   : "No upcoming events. Try selecting different religions or create your own events."
                 }
               </p>
