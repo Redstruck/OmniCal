@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
@@ -63,9 +62,7 @@ const ReligionSidebar = ({
   return <div className="w-80 bg-white border-r border-gray-200 shadow-sm">
       <div className="p-6 border-b border-gray-100">
         <div className="flex items-center gap-3 mb-2">
-          <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-            <span className="text-white text-sm font-bold">🌍</span>
-          </div>
+          
           <h3 className="text-gray-900 font-bold text-xl">Religious Traditions</h3>
         </div>
         <p className="text-gray-600 text-sm">Select religions to view their festivals and observances</p>
@@ -78,12 +75,7 @@ const ReligionSidebar = ({
           return <div key={religion.name} className={`group relative rounded-xl border-2 transition-all duration-200 hover:shadow-md ${religion.lightColor} ${religion.borderColor} ${isSelected ? 'shadow-sm ring-2 ring-opacity-50' : 'hover:shadow-lg'}`}>
                 <div className={`p-4 ${religion.lightColor} rounded-xl`}>
                   <div className="flex items-center space-x-3">
-                    <Checkbox 
-                      id={religion.name} 
-                      checked={isSelected} 
-                      onCheckedChange={checked => handleReligionChange(religion.name, checked as boolean)} 
-                      className="h-5 w-5 border-2 rounded-md data-[state=checked]:bg-primary data-[state=checked]:border-primary" 
-                    />
+                    <Checkbox id={religion.name} checked={isSelected} onCheckedChange={checked => handleReligionChange(religion.name, checked as boolean)} className="h-5 w-5 border-2 rounded-md data-[state=checked]:bg-primary data-[state=checked]:border-primary" />
                     <div className="flex-1">
                       <label htmlFor={religion.name} className={`font-semibold cursor-pointer transition-colors ${religion.textColor}`}>
                         {religion.name}
