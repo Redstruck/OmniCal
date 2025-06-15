@@ -1,8 +1,8 @@
 import { Search, Bell, User, Calendar as CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 interface NavigationProps {
-  onViewChange: (mode: "dashboard" | "calendar") => void;
-  currentView: "dashboard" | "calendar";
+  onViewChange: (mode: "dashboard" | "calendar" | "events") => void;
+  currentView: "dashboard" | "calendar" | "events";
 }
 const Navigation = ({
   onViewChange,
@@ -27,10 +27,13 @@ const Navigation = ({
             <Button variant={currentView === "calendar" ? "default" : "ghost"} className={`rounded-lg px-4 py-2 font-medium transition-all ${currentView === "calendar" ? "bg-blue-600 text-white hover:bg-blue-700" : "text-gray-700 hover:text-gray-900 hover:bg-gray-100/80"}`} onClick={() => onViewChange("calendar")}>
               Calendar
             </Button>
-            <Button variant="ghost" className="text-gray-700 hover:text-gray-900 hover:bg-gray-100/80 rounded-lg px-4 py-2 font-medium transition-all">
+            <Button 
+              variant={currentView === "events" ? "default" : "ghost"} 
+              className={`rounded-lg px-4 py-2 font-medium transition-all ${currentView === "events" ? "bg-blue-600 text-white hover:bg-blue-700" : "text-gray-700 hover:text-gray-900 hover:bg-gray-100/80"}`}
+              onClick={() => onViewChange("events")}
+            >
               Events
             </Button>
-            
           </div>
         </div>
         <div className="flex items-center gap-4">

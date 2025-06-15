@@ -6,13 +6,13 @@ import DualMonthCalendar from "@/components/DualMonthCalendar";
 
 const Index = () => {
   const [selectedReligions, setSelectedReligions] = useState<string[]>([]);
-  const [viewMode, setViewMode] = useState<"dashboard" | "calendar">("dashboard");
+  const [viewMode, setViewMode] = useState<"dashboard" | "calendar" | "events">("dashboard");
 
   const handleReligionChange = (religions: string[]) => {
     setSelectedReligions(religions);
   };
 
-  const handleViewChange = (mode: "dashboard" | "calendar") => {
+  const handleViewChange = (mode: "dashboard" | "calendar" | "events") => {
     setViewMode(mode);
   };
 
@@ -26,10 +26,14 @@ const Index = () => {
             onReligionChange={handleReligionChange}
           />
         )}
-        <DualMonthCalendar 
-          selectedReligions={selectedReligions} 
-          viewMode={viewMode}
-        />
+        {viewMode === "events" ? (
+          <EventsView selectedReligions={selectedReligions} />
+        ) : (
+          <DualMonthCalendar 
+            selectedReligions={selectedReligions} 
+            viewMode={viewMode}
+          />
+        )}
       </div>
     </div>
   );
