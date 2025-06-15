@@ -93,11 +93,76 @@
     @apply bg-background text-foreground;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   }
+
+  /* Dark mode specific overrides */
+  .dark body {
+    @apply bg-gray-900 text-white;
+  }
+
+  .dark .bg-white {
+    @apply bg-gray-900;
+  }
+
+  .dark .bg-gray-100 {
+    @apply bg-gray-800;
+  }
+
+  .dark .text-gray-900 {
+    @apply text-white;
+  }
+
+  .dark .text-gray-700 {
+    @apply text-gray-300;
+  }
+
+  .dark .text-gray-600 {
+    @apply text-gray-400;
+  }
+
+  .dark .text-gray-500 {
+    @apply text-gray-400;
+  }
+
+  .dark .border-gray-200 {
+    @apply border-gray-700;
+  }
+
+  .dark .border-gray-100 {
+    @apply border-gray-800;
+  }
+
+  .dark .hover\:bg-gray-100:hover {
+    @apply bg-gray-800;
+  }
+
+  .dark .bg-white\/95 {
+    @apply bg-gray-900/95;
+  }
+
+  .dark .shadow-sm {
+    @apply shadow-gray-900/20;
+  }
+
+  .dark .shadow-md {
+    @apply shadow-gray-900/30;
+  }
+
+  .dark .shadow-lg {
+    @apply shadow-gray-900/40;
+  }
+
+  .dark .shadow-xl {
+    @apply shadow-gray-900/50;
+  }
 }
 
 @layer components {
   .glass-card {
     @apply bg-white/80 backdrop-blur-lg border border-white/20 shadow-xl;
+  }
+
+  .dark .glass-card {
+    @apply bg-gray-900/80 border-gray-700/20;
   }
   
   .gradient-bg {
@@ -110,6 +175,10 @@
   
   .modern-card {
     @apply bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200;
+  }
+
+  .dark .modern-card {
+    @apply bg-gray-800 border-gray-700 hover:shadow-gray-900/30;
   }
   
   .religion-indicator {
