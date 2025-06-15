@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import ReligionSidebar from "@/components/ReligionSidebar";
 import DualMonthCalendar from "@/components/DualMonthCalendar";
@@ -9,8 +9,25 @@ const Index = () => {
   const [selectedReligions, setSelectedReligions] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<"dashboard" | "calendar" | "events">("dashboard");
 
+  // Load selected religions from localStorage on component mount
+  useEffect(() => {
+    const savedReligions = localStorage.getItem('selectedReligions');
+    if (savedReligions) {
+      try {
+        const parsedReligions = JSON.parse(savedReligions);
+        if (Array.isArray(parsedReligions)) {
+          setSelectedReligions(parsedReligions);
+        }
+      } catch (error) {
+        console.error('Error parsing saved religions from localStorage:', error);
+      }
+    }
+  }, []);
+
   const handleReligionChange = (religions: string[]) => {
     setSelectedReligions(religions);
+    // Save to localStorage whenever religions change
+    localStorage.setItem('selectedReligions', JSON.stringify(religions));
   };
 
   const handleViewChange = (mode: "dashboard" | "calendar" | "events") => {
