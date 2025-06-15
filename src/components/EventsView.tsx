@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { CalendarIcon, Clock, MapPin, Users, BookOpen, Heart, HandHeart, Church } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -58,7 +57,7 @@ const EventsView = ({ selectedReligions, personalEvents = [] }: EventsViewProps)
       case "Hinduism":
         return "bg-orange-500";
       case "Buddhism":
-        return "bg-teal-500";
+        return "bg-red-500";
       default:
         return "bg-gray-500";
     }
@@ -80,7 +79,7 @@ const EventsView = ({ selectedReligions, personalEvents = [] }: EventsViewProps)
       case "Hinduism":
         return "bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200";
       case "Buddhism":
-        return "bg-gradient-to-br from-teal-50 to-teal-100 border-teal-200";
+        return "bg-gradient-to-br from-red-50 to-red-100 border-red-200";
       default:
         return "bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200";
     }

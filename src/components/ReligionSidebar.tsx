@@ -35,10 +35,10 @@ const ReligionSidebar = ({
     description: "Hindu festivals & celebrations"
   }, {
     name: "Buddhism",
-    color: "bg-teal-500",
-    lightColor: "bg-teal-100",
-    borderColor: "border-teal-300",
-    textColor: "text-teal-800",
+    color: "bg-red-500",
+    lightColor: "bg-red-100",
+    borderColor: "border-red-300",
+    textColor: "text-red-800",
     icon: "☸️",
     description: "Buddhist observances & ceremonies"
   }, {
