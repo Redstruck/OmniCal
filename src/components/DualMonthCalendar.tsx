@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, getDay, isSameDay, isToday } from "date-fns";
 import { getAllEventsForDateRange, getEventsForDateRange, CalendarEvent, PersonalEvent } from "@/data/religiousEvents";
 import AddEventDialog from "./AddEventDialog";
@@ -12,7 +13,7 @@ interface DualMonthCalendarProps {
 const DualMonthCalendar = ({ selectedReligions }: DualMonthCalendarProps) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [personalEvents, setPersonalEvents] = useState<PersonalEvent[]>([]);
-  const nextMonthDate = addMonths(currentDate, 1);
+  const [selectedDay, setSelectedDay] = useState<Date | null>(null);
 
   const navigatePrevious = () => {
     setCurrentDate(subMonths(currentDate, 1));
@@ -130,30 +131,67 @@ const DualMonthCalendar = ({ selectedReligions }: DualMonthCalendarProps) => {
             const isCurrentDay = isToday(day);
             const dayColorClass = getCalendarDayColor(day);
             
+            if (hasEvent) {
+              return (
+                <Popover key={day.getTime()}>
+                  <PopoverTrigger asChild>
+                    <button
+                      className={`h-10 w-10 text-sm rounded flex items-center justify-center relative ${
+                        isCurrentDay 
+                          ? 'bg-blue-600 text-white font-bold' 
+                          : hasEvent 
+                          ? `${dayColorClass} font-semibold hover:opacity-80` 
+                          : 'text-gray-700 hover:bg-gray-100'
+                      }`}
+                    >
+                      {format(day, 'd')}
+                      {hasEvent && !isCurrentDay && (
+                        <div className={`absolute bottom-0 right-0 w-2 h-2 rounded-full ${
+                          dayEvents.some(e => e.type === "personal") ? "bg-purple-600" :
+                          dayEvents.some(e => (e as any).religion === "Christianity") ? "bg-blue-600" :
+                          dayEvents.some(e => (e as any).religion === "Islam") ? "bg-green-600" :
+                          dayEvents.some(e => (e as any).religion === "Judaism") ? "bg-yellow-600" :
+                          dayEvents.some(e => (e as any).religion === "Hinduism") ? "bg-orange-600" :
+                          dayEvents.some(e => (e as any).religion === "Buddhism") ? "bg-teal-600" :
+                          "bg-gray-600"
+                        }`}></div>
+                      )}
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-64 p-3 bg-white border shadow-lg">
+                    <div className="space-y-2">
+                      <h4 className="font-semibold text-sm text-gray-900">
+                        {format(day, 'MMMM d, yyyy')}
+                      </h4>
+                      {dayEvents.map((event) => (
+                        <div key={event.id} className="text-xs">
+                          <div className="flex items-center justify-between">
+                            <span className="font-medium text-gray-800">{event.title}</span>
+                            <span className="text-gray-500">
+                              {event.type === "personal" ? "Personal" : (event as any).religion}
+                            </span>
+                          </div>
+                          {event.description && (
+                            <p className="text-gray-600 mt-1">{event.description}</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              );
+            }
+            
             return (
               <button
                 key={day.getTime()}
                 className={`h-10 w-10 text-sm rounded flex items-center justify-center relative ${
                   isCurrentDay 
                     ? 'bg-blue-600 text-white font-bold' 
-                    : hasEvent 
-                    ? `${dayColorClass} font-semibold hover:opacity-80` 
                     : 'text-gray-700 hover:bg-gray-100'
                 }`}
-                title={dayEvents.length > 0 ? dayEvents.map(e => e.title).join(', ') : undefined}
               >
                 {format(day, 'd')}
-                {hasEvent && !isCurrentDay && (
-                  <div className={`absolute bottom-0 right-0 w-2 h-2 rounded-full ${
-                    dayEvents.some(e => e.type === "personal") ? "bg-purple-600" :
-                    dayEvents.some(e => (e as any).religion === "Christianity") ? "bg-blue-600" :
-                    dayEvents.some(e => (e as any).religion === "Islam") ? "bg-green-600" :
-                    dayEvents.some(e => (e as any).religion === "Judaism") ? "bg-yellow-600" :
-                    dayEvents.some(e => (e as any).religion === "Hinduism") ? "bg-orange-600" :
-                    dayEvents.some(e => (e as any).religion === "Buddhism") ? "bg-teal-600" :
-                    "bg-gray-600"
-                  }`}></div>
-                )}
               </button>
             );
           })}
