@@ -27,6 +27,17 @@ const Navigation = ({ onViewChange, currentView }: NavigationProps) => {
           </div>
           <div className="flex items-center gap-2">
             <Button 
+              variant={currentView === "dashboard" ? "default" : "ghost"} 
+              className={`rounded-lg px-4 py-2 font-medium transition-all ${
+                currentView === "dashboard" 
+                  ? "bg-blue-600 text-white hover:bg-blue-700" 
+                  : "text-gray-700 hover:text-gray-900 hover:bg-gray-100/80"
+              }`}
+              onClick={() => onViewChange("dashboard")}
+            >
+              Home
+            </Button>
+            <Button 
               variant={currentView === "calendar" ? "default" : "ghost"} 
               className={`rounded-lg px-4 py-2 font-medium transition-all ${
                 currentView === "calendar" 
