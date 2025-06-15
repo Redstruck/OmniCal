@@ -6,20 +6,30 @@ import DualMonthCalendar from "@/components/DualMonthCalendar";
 
 const Index = () => {
   const [selectedReligions, setSelectedReligions] = useState<string[]>([]);
+  const [viewMode, setViewMode] = useState<"dashboard" | "calendar">("dashboard");
 
   const handleReligionChange = (religions: string[]) => {
     setSelectedReligions(religions);
   };
 
+  const handleViewChange = (mode: "dashboard" | "calendar") => {
+    setViewMode(mode);
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
-      <Navigation />
+      <Navigation onViewChange={handleViewChange} currentView={viewMode} />
       <div className="flex">
-        <ReligionSidebar 
-          selectedReligions={selectedReligions}
-          onReligionChange={handleReligionChange}
+        {viewMode === "dashboard" && (
+          <ReligionSidebar 
+            selectedReligions={selectedReligions}
+            onReligionChange={handleReligionChange}
+          />
+        )}
+        <DualMonthCalendar 
+          selectedReligions={selectedReligions} 
+          viewMode={viewMode}
         />
-        <DualMonthCalendar selectedReligions={selectedReligions} />
       </div>
     </div>
   );

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,9 +8,10 @@ import AddEventDialog from "./AddEventDialog";
 
 interface DualMonthCalendarProps {
   selectedReligions: string[];
+  viewMode?: "dashboard" | "calendar";
 }
 
-const DualMonthCalendar = ({ selectedReligions }: DualMonthCalendarProps) => {
+const DualMonthCalendar = ({ selectedReligions, viewMode = "dashboard" }: DualMonthCalendarProps) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [personalEvents, setPersonalEvents] = useState<PersonalEvent[]>([]);
 
@@ -140,21 +140,23 @@ const DualMonthCalendar = ({ selectedReligions }: DualMonthCalendarProps) => {
     const weekDays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
     return (
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-        <div className="text-center mb-6">
-          <h3 className="font-bold text-xl text-gray-900 mb-1">{format(date, 'MMMM yyyy')}</h3>
+      <div className={`bg-white rounded-xl p-8 shadow-sm border border-gray-100 ${viewMode === "calendar" ? "w-full max-w-2xl" : ""}`}>
+        <div className="text-center mb-8">
+          <h3 className={`font-bold text-gray-900 mb-2 ${viewMode === "calendar" ? "text-3xl" : "text-xl"}`}>
+            {format(date, 'MMMM yyyy')}
+          </h3>
           <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mx-auto"></div>
         </div>
-        <div className="grid grid-cols-7 gap-2 mb-4">
+        <div className="grid grid-cols-7 gap-3 mb-6">
           {weekDays.map((day, index) => (
-            <div key={index} className="text-center text-sm font-semibold text-gray-500 py-3">
+            <div key={index} className={`text-center font-semibold text-gray-500 ${viewMode === "calendar" ? "text-lg py-4" : "text-sm py-3"}`}>
               {day}
             </div>
           ))}
         </div>
-        <div className="grid grid-cols-7 gap-2">
+        <div className="grid grid-cols-7 gap-3">
           {Array.from({ length: startDay }).map((_, index) => (
-            <div key={index} className="h-12"></div>
+            <div key={index} className={viewMode === "calendar" ? "h-16" : "h-12"}></div>
           ))}
           {days.map((day) => {
             const hasEvent = hasEventOnDate(day);
@@ -167,7 +169,7 @@ const DualMonthCalendar = ({ selectedReligions }: DualMonthCalendarProps) => {
                 <Popover key={day.getTime()}>
                   <PopoverTrigger asChild>
                     <button
-                      className={`h-12 w-12 text-sm rounded-xl flex items-center justify-center relative transition-all duration-200 hover:scale-105 ${
+                      className={`${viewMode === "calendar" ? "h-16 w-16 text-lg" : "h-12 w-12 text-sm"} rounded-xl flex items-center justify-center relative transition-all duration-200 hover:scale-105 ${
                         isCurrentDay 
                           ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold shadow-lg' 
                           : hasEvent 
@@ -181,7 +183,7 @@ const DualMonthCalendar = ({ selectedReligions }: DualMonthCalendarProps) => {
                           {dayEvents.slice(0, 3).map((event, index) => (
                             <div 
                               key={index} 
-                              className={`w-2 h-2 rounded-full shadow-sm ${
+                              className={`${viewMode === "calendar" ? "w-3 h-3" : "w-2 h-2"} rounded-full shadow-sm ${
                                 event.type === "personal" ? "bg-purple-600" :
                                 (event as any).religion === "Christianity" ? "bg-blue-600" :
                                 (event as any).religion === "Islam" ? "bg-green-600" :
@@ -247,7 +249,7 @@ const DualMonthCalendar = ({ selectedReligions }: DualMonthCalendarProps) => {
             return (
               <button
                 key={day.getTime()}
-                className={`h-12 w-12 text-sm rounded-xl flex items-center justify-center relative transition-all duration-200 hover:scale-105 ${
+                className={`${viewMode === "calendar" ? "h-16 w-16 text-lg" : "h-12 w-12 text-sm"} rounded-xl flex items-center justify-center relative transition-all duration-200 hover:scale-105 ${
                   isCurrentDay 
                     ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold shadow-lg' 
                     : 'text-gray-700 hover:bg-gray-100'
@@ -261,6 +263,44 @@ const DualMonthCalendar = ({ selectedReligions }: DualMonthCalendarProps) => {
       </div>
     );
   };
+
+  if (viewMode === "calendar") {
+    return (
+      <div className="flex-1 p-8 bg-gradient-to-br from-gray-50 to-white min-h-screen">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-center mb-8">
+            <div className="animate-fade-in text-center">
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">Calendar View</h1>
+              <p className="text-gray-600 text-lg">Navigate through months to view religious festivals and events</p>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-center">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={navigatePrevious}
+              className="hover:bg-gray-100 rounded-xl hover-lift mr-8"
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </Button>
+            <div className="flex gap-16">
+              {renderCalendar(currentDate)}
+              {renderCalendar(addMonths(currentDate, 1))}
+            </div>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={navigateNext}
+              className="hover:bg-gray-100 rounded-xl hover-lift ml-8"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const personalEventsCount = upcomingEvents.filter(event => event.type === "personal").length;
   const religiousEventsCount = upcomingEvents.filter(event => event.type !== "personal").length;
@@ -288,7 +328,7 @@ const DualMonthCalendar = ({ selectedReligions }: DualMonthCalendarProps) => {
             </Button>
             <div className="flex gap-16 mx-12">
               {renderCalendar(currentDate)}
-              {renderCalendar(nextMonthDate)}
+              {renderCalendar(addMonths(currentDate, 1))}
             </div>
             <Button 
               variant="ghost" 
@@ -307,11 +347,11 @@ const DualMonthCalendar = ({ selectedReligions }: DualMonthCalendarProps) => {
             <div className="flex gap-6 text-sm">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                <span className="text-gray-600">{religiousEventsCount} Religious</span>
+                <span className="text-gray-600">{upcomingEvents.filter(event => event.type !== "personal").length} Religious</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                <span className="text-gray-600">{personalEventsCount} Personal</span>
+                <span className="text-gray-600">{upcomingEvents.filter(event => event.type === "personal").length} Personal</span>
               </div>
             </div>
           </div>
