@@ -35,12 +35,12 @@ const Navigation = ({
         </div>
         <div className="flex items-center gap-4">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <input type="text" placeholder="Search events..." className="pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl bg-gray-50/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 focus:bg-white transition-all duration-200 w-64" />
+            
+            
           </div>
           <Button variant="ghost" size="icon" className="relative hover:bg-gray-100/80 rounded-xl">
             <Bell className="h-5 w-5 text-gray-600" />
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
+            
           </Button>
           <Button variant="ghost" size="icon" className="hover:bg-gray-100/80 rounded-xl">
             <User className="h-5 w-5 text-gray-600" />
