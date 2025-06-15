@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -43,23 +42,62 @@ const DualMonthCalendar = ({ selectedReligions }: DualMonthCalendarProps) => {
     return allEvents.some(event => isSameDay(event.date, date));
   };
 
+  const getReligionColor = (religion: string): string => {
+    switch (religion) {
+      case "Christianity":
+        return "bg-blue-100 border-blue-300";
+      case "Islam":
+        return "bg-green-100 border-green-300";
+      case "Judaism":
+        return "bg-yellow-100 border-yellow-300";
+      case "Hinduism":
+        return "bg-orange-100 border-orange-300";
+      case "Buddhism":
+        return "bg-teal-100 border-teal-300";
+      default:
+        return "bg-gray-100 border-gray-300";
+    }
+  };
+
   const getEventTypeColor = (event: CalendarEvent): string => {
     if (event.type === "personal") {
       return "bg-purple-100 border-purple-300";
     }
     
-    switch (event.type) {
-      case "holiday":
-        return "bg-red-100 border-red-300";
-      case "celebration":
-        return "bg-yellow-100 border-yellow-300";
-      case "observance":
-        return "bg-blue-100 border-blue-300";
-      case "fast":
-        return "bg-gray-100 border-gray-300";
-      default:
-        return "bg-gray-100 border-gray-300";
+    return getReligionColor((event as any).religion);
+  };
+
+  const getCalendarDayColor = (date: Date): string => {
+    const dayEvents = allEvents.filter(event => isSameDay(event.date, date));
+    if (dayEvents.length === 0) return "";
+
+    // If there are personal events, prioritize purple
+    const hasPersonalEvent = dayEvents.some(event => event.type === "personal");
+    if (hasPersonalEvent) {
+      return "bg-purple-100 text-purple-800";
     }
+
+    // Otherwise, use the first religious event's color
+    const firstReligiousEvent = dayEvents.find(event => event.type !== "personal");
+    if (firstReligiousEvent) {
+      const religion = (firstReligiousEvent as any).religion;
+      switch (religion) {
+        case "Christianity":
+          return "bg-blue-100 text-blue-800";
+        case "Islam":
+          return "bg-green-100 text-green-800";
+        case "Judaism":
+          return "bg-yellow-100 text-yellow-800";
+        case "Hinduism":
+          return "bg-orange-100 text-orange-800";
+        case "Buddhism":
+          return "bg-teal-100 text-teal-800";
+        default:
+          return "bg-gray-100 text-gray-800";
+      }
+    }
+
+    return "";
   };
 
   const renderCalendar = (date: Date) => {
@@ -90,6 +128,7 @@ const DualMonthCalendar = ({ selectedReligions }: DualMonthCalendarProps) => {
             const hasEvent = hasEventOnDate(day);
             const dayEvents = allEvents.filter(event => isSameDay(event.date, day));
             const isCurrentDay = isToday(day);
+            const dayColorClass = getCalendarDayColor(day);
             
             return (
               <button
@@ -98,14 +137,22 @@ const DualMonthCalendar = ({ selectedReligions }: DualMonthCalendarProps) => {
                   isCurrentDay 
                     ? 'bg-blue-600 text-white font-bold' 
                     : hasEvent 
-                    ? 'bg-green-100 text-green-800 font-semibold hover:bg-green-200' 
+                    ? `${dayColorClass} font-semibold hover:opacity-80` 
                     : 'text-gray-700 hover:bg-gray-100'
                 }`}
                 title={dayEvents.length > 0 ? dayEvents.map(e => e.title).join(', ') : undefined}
               >
                 {format(day, 'd')}
                 {hasEvent && !isCurrentDay && (
-                  <div className="absolute bottom-0 right-0 w-2 h-2 bg-green-600 rounded-full"></div>
+                  <div className={`absolute bottom-0 right-0 w-2 h-2 rounded-full ${
+                    dayEvents.some(e => e.type === "personal") ? "bg-purple-600" :
+                    dayEvents.some(e => (e as any).religion === "Christianity") ? "bg-blue-600" :
+                    dayEvents.some(e => (e as any).religion === "Islam") ? "bg-green-600" :
+                    dayEvents.some(e => (e as any).religion === "Judaism") ? "bg-yellow-600" :
+                    dayEvents.some(e => (e as any).religion === "Hinduism") ? "bg-orange-600" :
+                    dayEvents.some(e => (e as any).religion === "Buddhism") ? "bg-teal-600" :
+                    "bg-gray-600"
+                  }`}></div>
                 )}
               </button>
             );
