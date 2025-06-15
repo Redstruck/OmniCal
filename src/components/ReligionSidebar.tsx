@@ -3,9 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
 
-const ReligionSidebar = () => {
-  const [selectedReligions, setSelectedReligions] = useState<string[]>([]);
+interface ReligionSidebarProps {
+  selectedReligions: string[];
+  onReligionChange: (religions: string[]) => void;
+}
 
+const ReligionSidebar = ({ selectedReligions, onReligionChange }: ReligionSidebarProps) => {
   const religions = [
     "Christianity",
     "Islam", 
@@ -15,11 +18,13 @@ const ReligionSidebar = () => {
   ];
 
   const handleReligionChange = (religion: string, checked: boolean) => {
+    let updatedReligions;
     if (checked) {
-      setSelectedReligions([...selectedReligions, religion]);
+      updatedReligions = [...selectedReligions, religion];
     } else {
-      setSelectedReligions(selectedReligions.filter(r => r !== religion));
+      updatedReligions = selectedReligions.filter(r => r !== religion);
     }
+    onReligionChange(updatedReligions);
   };
 
   return (
