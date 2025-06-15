@@ -3,6 +3,7 @@ import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import ReligionSidebar from "@/components/ReligionSidebar";
 import DualMonthCalendar from "@/components/DualMonthCalendar";
+import EventsView from "@/components/EventsView";
 
 const Index = () => {
   const [selectedReligions, setSelectedReligions] = useState<string[]>([]);
