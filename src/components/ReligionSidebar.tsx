@@ -79,7 +79,7 @@ const ReligionSidebar = ({
         <div className="space-y-4">
           {religions.map(religion => {
           const isSelected = selectedReligions.includes(religion.name);
-          return <div key={religion.name} className={`group relative rounded-xl border-2 transition-all duration-200 hover:shadow-md ${isSelected ? `${religion.lightColor} ${religion.borderColor} shadow-sm` : `${religion.lightColor} ${religion.borderColor} opacity-60 hover:opacity-100`}`}>
+          return <div key={religion.name} className={`group relative rounded-xl border-2 transition-all duration-200 hover:shadow-md ${religion.lightColor} ${religion.borderColor} ${isSelected ? 'shadow-sm ring-2 ring-opacity-50' : 'hover:shadow-lg'}`}>
                 <div className={`p-4 ${religion.lightColor} rounded-xl`}>
                   <div className="flex items-start space-x-3">
                     <div className="flex items-center space-x-3 flex-1">
