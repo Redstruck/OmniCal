@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
@@ -76,22 +77,17 @@ const ReligionSidebar = ({
           const isSelected = selectedReligions.includes(religion.name);
           return <div key={religion.name} className={`group relative rounded-xl border-2 transition-all duration-200 hover:shadow-md ${religion.lightColor} ${religion.borderColor} ${isSelected ? 'shadow-sm ring-2 ring-opacity-50' : 'hover:shadow-lg'}`}>
                 <div className={`p-4 ${religion.lightColor} rounded-xl`}>
-                  <div className="flex items-start space-x-3">
-                    <div className="flex items-center space-x-3 flex-1">
-                      <Checkbox id={religion.name} checked={isSelected} onCheckedChange={checked => handleReligionChange(religion.name, checked as boolean)} className="mt-1" />
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          
-                          <label htmlFor={religion.name} className={`font-semibold cursor-pointer transition-colors ${religion.textColor}`}>
-                            {religion.name}
-                          </label>
-                        </div>
-                        
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-center gap-1">
-                      
-                      
+                  <div className="flex items-center space-x-3">
+                    <Checkbox 
+                      id={religion.name} 
+                      checked={isSelected} 
+                      onCheckedChange={checked => handleReligionChange(religion.name, checked as boolean)} 
+                      className="h-5 w-5 border-2 rounded-md data-[state=checked]:bg-primary data-[state=checked]:border-primary" 
+                    />
+                    <div className="flex-1">
+                      <label htmlFor={religion.name} className={`font-semibold cursor-pointer transition-colors ${religion.textColor}`}>
+                        {religion.name}
+                      </label>
                     </div>
                   </div>
                 </div>
