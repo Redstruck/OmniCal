@@ -1,23 +1,29 @@
-import { Search, Bell, User } from "lucide-react";
+
+import { Search, Bell, User, Calendar as CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
 const Navigation = () => {
-  return <nav className="bg-white border-b border-gray-200 px-6 py-3">
+  return (
+    <nav className="bg-white/95 backdrop-blur-lg border-b border-gray-200/50 px-6 py-4 sticky top-0 z-50 shadow-sm">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-8">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">C</span>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center shadow-lg">
+              <CalendarIcon className="text-white h-5 w-5" />
             </div>
-            <span className="font-semibold text-gray-900">Calendar</span>
+            <div>
+              <span className="font-bold text-xl text-gradient">Calendar</span>
+              <p className="text-xs text-gray-500">Religious Events</p>
+            </div>
           </div>
-          <div className="flex items-center gap-6">
-            <Button variant="ghost" className="text-gray-700 hover:text-gray-900">
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" className="text-gray-700 hover:text-gray-900 hover:bg-gray-100/80 rounded-lg px-4 py-2 font-medium transition-all">
               Calendar
             </Button>
-            <Button variant="ghost" className="text-gray-700 hover:text-gray-900">
+            <Button variant="ghost" className="text-gray-700 hover:text-gray-900 hover:bg-gray-100/80 rounded-lg px-4 py-2 font-medium transition-all">
               Events
             </Button>
-            <Button variant="ghost" className="text-gray-700 hover:text-gray-900">
+            <Button variant="ghost" className="text-gray-700 hover:text-gray-900 hover:bg-gray-100/80 rounded-lg px-4 py-2 font-medium transition-all">
               Settings
             </Button>
           </div>
@@ -25,12 +31,23 @@ const Navigation = () => {
         <div className="flex items-center gap-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <input type="text" placeholder="Search events..." className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+            <input 
+              type="text" 
+              placeholder="Search events..." 
+              className="pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl bg-gray-50/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 focus:bg-white transition-all duration-200 w-64" 
+            />
           </div>
-          
-          
+          <Button variant="ghost" size="icon" className="relative hover:bg-gray-100/80 rounded-xl">
+            <Bell className="h-5 w-5 text-gray-600" />
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
+          </Button>
+          <Button variant="ghost" size="icon" className="hover:bg-gray-100/80 rounded-xl">
+            <User className="h-5 w-5 text-gray-600" />
+          </Button>
         </div>
       </div>
-    </nav>;
+    </nav>
+  );
 };
+
 export default Navigation;
