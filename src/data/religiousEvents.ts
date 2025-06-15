@@ -1,4 +1,3 @@
-
 import { addDays, addMonths, format } from "date-fns";
 
 export interface ReligiousEvent {
@@ -9,6 +8,16 @@ export interface ReligiousEvent {
   type: "holiday" | "observance" | "fast" | "celebration";
   description?: string;
 }
+
+export interface PersonalEvent {
+  id: string;
+  title: string;
+  date: Date;
+  description?: string;
+  type: "personal";
+}
+
+export type CalendarEvent = ReligiousEvent | PersonalEvent;
 
 const currentYear = new Date().getFullYear();
 
@@ -138,6 +147,20 @@ export const religiousEvents: ReligiousEvent[] = [
 
 export const getEventsByReligions = (religions: string[]): ReligiousEvent[] => {
   return religiousEvents.filter(event => religions.includes(event.religion));
+};
+
+export const getAllEventsForDateRange = (
+  startDate: Date, 
+  endDate: Date, 
+  religions: string[], 
+  personalEvents: PersonalEvent[] = []
+): CalendarEvent[] => {
+  const filteredReligiousEvents = getEventsByReligions(religions);
+  const allEvents = [...filteredReligiousEvents, ...personalEvents];
+  
+  return allEvents.filter(event => 
+    event.date >= startDate && event.date <= endDate
+  );
 };
 
 export const getEventsForDateRange = (startDate: Date, endDate: Date, religions: string[]): ReligiousEvent[] => {
