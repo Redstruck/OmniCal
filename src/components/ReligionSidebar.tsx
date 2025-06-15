@@ -1,13 +1,10 @@
-
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
-
 interface ReligionSidebarProps {
   selectedReligions: string[];
   onReligionChange: (religions: string[]) => void;
 }
-
 const ReligionSidebar = ({
   selectedReligions,
   onReligionChange
@@ -53,7 +50,6 @@ const ReligionSidebar = ({
     icon: "✡️",
     description: "Jewish holidays & traditions"
   }];
-
   const handleReligionChange = (religion: string, checked: boolean) => {
     let updatedReligions;
     if (checked) {
@@ -63,7 +59,6 @@ const ReligionSidebar = ({
     }
     onReligionChange(updatedReligions);
   };
-
   return <div className="w-80 bg-white border-r border-gray-200 shadow-sm">
       <div className="p-6 border-b border-gray-100">
         <div className="flex items-center gap-3 mb-2">
@@ -86,19 +81,17 @@ const ReligionSidebar = ({
                       <Checkbox id={religion.name} checked={isSelected} onCheckedChange={checked => handleReligionChange(religion.name, checked as boolean)} className="mt-1" />
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <span className="text-xl">{religion.icon}</span>
+                          
                           <label htmlFor={religion.name} className={`font-semibold cursor-pointer transition-colors ${religion.textColor}`}>
                             {religion.name}
                           </label>
                         </div>
-                        <p className={`text-sm ${religion.textColor} opacity-80`}>
-                          {religion.description}
-                        </p>
+                        
                       </div>
                     </div>
                     <div className="flex flex-col items-center gap-1">
-                      <div className={`w-4 h-4 rounded-full ${religion.color} shadow-sm`}></div>
-                      <span className="text-xs text-gray-500 font-medium">Color</span>
+                      
+                      
                     </div>
                   </div>
                 </div>
@@ -128,5 +121,4 @@ const ReligionSidebar = ({
       </div>
     </div>;
 };
-
 export default ReligionSidebar;
