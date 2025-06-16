@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -15,6 +15,26 @@ const DualMonthCalendar = ({ selectedReligions, viewMode = "dashboard" }: DualMo
   const [currentDate, setCurrentDate] = useState(new Date());
   const [personalEvents, setPersonalEvents] = useState<PersonalEvent[]>([]);
 
+  // Load personal events from localStorage on component mount
+  useEffect(() => {
+    const savedEvents = localStorage.getItem('personalEvents');
+    if (savedEvents) {
+      try {
+        const parsedEvents = JSON.parse(savedEvents);
+        if (Array.isArray(parsedEvents)) {
+          // Convert date strings back to Date objects
+          const eventsWithDates = parsedEvents.map(event => ({
+            ...event,
+            date: new Date(event.date)
+          }));
+          setPersonalEvents(eventsWithDates);
+        }
+      } catch (error) {
+        console.error('Error parsing saved personal events from localStorage:', error);
+      }
+    }
+  }, []);
+
   const navigatePrevious = () => {
     setCurrentDate(subMonths(currentDate, 1));
   };
@@ -24,7 +44,10 @@ const DualMonthCalendar = ({ selectedReligions, viewMode = "dashboard" }: DualMo
   };
 
   const handleAddEvent = (newEvent: PersonalEvent) => {
-    setPersonalEvents(prev => [...prev, newEvent]);
+    const updatedEvents = [...personalEvents, newEvent];
+    setPersonalEvents(updatedEvents);
+    // Save to localStorage whenever events change
+    localStorage.setItem('personalEvents', JSON.stringify(updatedEvents));
   };
 
   // Get events for the current and next month
