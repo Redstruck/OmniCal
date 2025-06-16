@@ -40,7 +40,7 @@ const Navigation = ({
               <img src="/lovable-uploads/1b93c5df-355c-4fe4-bfd6-b9054c785489.png" alt="Religious Calendar Logo" className="w-full h-full object-cover" />
             </div>
             <div>
-              <span className="font-bold text-xl text-gradient">OmniCal</span>
+              <span className="font-bold text-xl text-gradient">The OmniCal</span>
               <p className="text-xs text-gray-500">Live, Laugh, Love</p>
             </div>
           </div>
