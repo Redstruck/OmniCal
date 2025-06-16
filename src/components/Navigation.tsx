@@ -41,7 +41,7 @@ const Navigation = ({
             </div>
             <div>
               <span className="font-bold text-xl text-gradient">OmniCal</span>
-              <p className="text-xs text-gray-500">Religious Events</p>
+              <p className="text-xs text-gray-500">Live, Laugh, Love</p>
             </div>
           </div>
           <div className="flex items-center gap-2 relative" ref={navRef}>
