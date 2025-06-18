@@ -5,6 +5,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, getDay, isSameDay, isToday } from "date-fns";
 import { getAllEventsForDateRange, getEventsForDateRange, CalendarEvent, PersonalEvent, ReligiousEvent, isDateInEvent, getEventDuration } from "@/data/religiousEvents";
 import AddEventDialog from "./AddEventDialog";
+import DeleteEventDialog from "./DeleteEventDialog";
+import { usePersonalEvents } from "@/hooks/usePersonalEvents";
 
 interface DualMonthCalendarProps {
   selectedReligions: string[];
@@ -13,27 +15,7 @@ interface DualMonthCalendarProps {
 
 const DualMonthCalendar = ({ selectedReligions, viewMode = "dashboard" }: DualMonthCalendarProps) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [personalEvents, setPersonalEvents] = useState<PersonalEvent[]>([]);
-
-  // Load personal events from localStorage on component mount
-  useEffect(() => {
-    const savedEvents = localStorage.getItem('personalEvents');
-    if (savedEvents) {
-      try {
-        const parsedEvents = JSON.parse(savedEvents);
-        if (Array.isArray(parsedEvents)) {
-          // Convert date strings back to Date objects
-          const eventsWithDates = parsedEvents.map(event => ({
-            ...event,
-            date: new Date(event.date)
-          }));
-          setPersonalEvents(eventsWithDates);
-        }
-      } catch (error) {
-        console.error('Error parsing saved personal events from localStorage:', error);
-      }
-    }
-  }, []);
+  const { personalEvents, addEvent, deleteEvent } = usePersonalEvents();
 
   const navigatePrevious = () => {
     setCurrentDate(subMonths(currentDate, 1));
@@ -41,13 +23,6 @@ const DualMonthCalendar = ({ selectedReligions, viewMode = "dashboard" }: DualMo
 
   const navigateNext = () => {
     setCurrentDate(addMonths(currentDate, 1));
-  };
-
-  const handleAddEvent = (newEvent: PersonalEvent) => {
-    const updatedEvents = [...personalEvents, newEvent];
-    setPersonalEvents(updatedEvents);
-    // Save to localStorage whenever events change
-    localStorage.setItem('personalEvents', JSON.stringify(updatedEvents));
   };
 
   // Get events for the current and next month
@@ -232,10 +207,18 @@ const DualMonthCalendar = ({ selectedReligions, viewMode = "dashboard" }: DualMo
                       {dayEvents.map((event) => (
                         <div key={event.id} className={`p-4 rounded-lg border ${getEventTypeColor(event)} hover-lift`}>
                           <div className="flex items-start justify-between mb-2">
-                            <h5 className="font-semibold text-gray-800 text-lg">{event.title}</h5>
-                            <span className="text-xs px-2 py-1 bg-white rounded-md font-medium text-gray-600 shadow-sm">
-                              {event.type === "personal" ? "Personal" : (event as any).religion}
-                            </span>
+                            <h5 className="font-semibold text-gray-800 text-lg flex-1">{event.title}</h5>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs px-2 py-1 bg-white rounded-md font-medium text-gray-600 shadow-sm">
+                                {event.type === "personal" ? "Personal" : (event as any).religion}
+                              </span>
+                              {event.type === "personal" && (
+                                <DeleteEventDialog
+                                  event={event as PersonalEvent}
+                                  onDelete={deleteEvent}
+                                />
+                              )}
+                            </div>
                           </div>
                           <p className="text-sm text-gray-600 mb-2 font-medium">
                             {getEventDateDisplay(event)}
@@ -336,7 +319,7 @@ const DualMonthCalendar = ({ selectedReligions, viewMode = "dashboard" }: DualMo
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Religious Calendar Dashboard</h1>
             <p className="text-gray-600">Comprehensive view of religious festivals and observances from around the world.</p>
           </div>
-          <AddEventDialog onAddEvent={handleAddEvent} />
+          <AddEventDialog onAddEvent={addEvent} />
         </div>
 
         <div className="modern-card p-8 mb-8">
@@ -391,9 +374,17 @@ const DualMonthCalendar = ({ selectedReligions, viewMode = "dashboard" }: DualMo
                       </p>
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                      <span className="text-xs px-3 py-1 bg-white rounded-full font-medium text-gray-600 shadow-sm">
-                        {event.type === "personal" ? "Personal" : (event as any).religion}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs px-3 py-1 bg-white rounded-full font-medium text-gray-600 shadow-sm">
+                          {event.type === "personal" ? "Personal" : (event as any).religion}
+                        </span>
+                        {event.type === "personal" && (
+                          <DeleteEventDialog
+                            event={event as PersonalEvent}
+                            onDelete={deleteEvent}
+                          />
+                        )}
+                      </div>
                       {event.type !== "personal" && (event as ReligiousEvent).endDate && (
                         <span className="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full font-medium">
                           {getEventDuration(event as ReligiousEvent)} days

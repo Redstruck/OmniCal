@@ -4,13 +4,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { format, isToday, isTomorrow } from "date-fns";
 import { getAllEventsForDateRange, CalendarEvent, PersonalEvent, ReligiousEvent, getEventDuration } from "@/data/religiousEvents";
+import DeleteEventDialog from "./DeleteEventDialog";
+import { usePersonalEvents } from "@/hooks/usePersonalEvents";
 
 interface EventsViewProps {
   selectedReligions: string[];
-  personalEvents?: PersonalEvent[];
 }
 
-const EventsView = ({ selectedReligions, personalEvents = [] }: EventsViewProps) => {
+const EventsView = ({ selectedReligions }: EventsViewProps) => {
+  const { personalEvents, deleteEvent } = usePersonalEvents();
+
   // Get events for the next 6 months
   const today = new Date();
   const sixMonthsFromNow = new Date(today.getFullYear(), today.getMonth() + 6, today.getDate());
@@ -142,9 +145,17 @@ const EventsView = ({ selectedReligions, personalEvents = [] }: EventsViewProps)
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                      <Badge variant="outline" className="text-sm px-3 py-1 font-medium">
-                        {event.type === "personal" ? "Personal Event" : (event as any).religion}
-                      </Badge>
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="text-sm px-3 py-1 font-medium">
+                          {event.type === "personal" ? "Personal Event" : (event as any).religion}
+                        </Badge>
+                        {event.type === "personal" && (
+                          <DeleteEventDialog
+                            event={event as PersonalEvent}
+                            onDelete={deleteEvent}
+                          />
+                        )}
+                      </div>
                       {event.type !== "personal" && (event as ReligiousEvent).endDate && (
                         <Badge variant="secondary" className="text-xs px-2 py-1">
                           {getEventDuration(event as ReligiousEvent)} days

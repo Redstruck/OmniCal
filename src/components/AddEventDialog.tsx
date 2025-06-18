@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,14 +15,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { CalendarIcon, Plus } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-
-interface PersonalEvent {
-  id: string;
-  title: string;
-  date: Date;
-  description?: string;
-  type: "personal";
-}
+import { PersonalEvent } from "@/data/religiousEvents";
 
 interface AddEventDialogProps {
   onAddEvent: (event: PersonalEvent) => void;
@@ -41,7 +33,7 @@ const AddEventDialog = ({ onAddEvent }: AddEventDialogProps) => {
     if (!title || !date) return;
 
     const newEvent: PersonalEvent = {
-      id: `personal-${Date.now()}`,
+      id: `personal-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       title,
       date,
       description: description || undefined,
