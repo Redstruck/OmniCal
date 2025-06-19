@@ -63,7 +63,7 @@ const DeleteEventDialog = ({ event, onDelete, disabled = false }: DeleteEventDia
               )}
             </div>
             <p className="text-red-600 font-medium">
-              This action cannot be undone permanently after 5 seconds.
+              This action cannot be undone.
             </p>
           </AlertDialogDescription>
         </AlertDialogHeader>

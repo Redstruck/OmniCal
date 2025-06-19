@@ -282,26 +282,30 @@ const DualMonthCalendar = ({ selectedReligions, viewMode = "dashboard" }: DualMo
           </div>
 
           <div className="flex items-center justify-center">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={navigatePrevious}
-              className="hover:bg-gray-100 rounded-xl hover-lift mr-8"
-            >
-              <ChevronLeft className="h-6 w-6" />
-            </Button>
+            <div className="fixed left-8 top-1/2 transform -translate-y-1/2 z-10">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={navigatePrevious}
+                className="hover:bg-gray-100 rounded-xl hover-lift h-12 w-12"
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </Button>
+            </div>
             <div className="flex gap-16">
               {renderCalendar(currentDate)}
               {renderCalendar(addMonths(currentDate, 1))}
             </div>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={navigateNext}
-              className="hover:bg-gray-100 rounded-xl hover-lift ml-8"
-            >
-              <ChevronRight className="h-6 w-6" />
-            </Button>
+            <div className="fixed right-8 top-1/2 transform -translate-y-1/2 z-10">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={navigateNext}
+                className="hover:bg-gray-100 rounded-xl hover-lift h-12 w-12"
+              >
+                <ChevronRight className="h-6 w-6" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -324,26 +328,30 @@ const DualMonthCalendar = ({ selectedReligions, viewMode = "dashboard" }: DualMo
 
         <div className="modern-card p-8 mb-8">
           <div className="flex items-center justify-center mb-8">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={navigatePrevious}
-              className="hover:bg-gray-100 rounded-xl hover-lift"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </Button>
+            <div className="fixed left-8 top-1/2 transform -translate-y-1/2 z-10">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={navigatePrevious}
+                className="hover:bg-gray-100 rounded-xl hover-lift h-12 w-12"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </Button>
+            </div>
             <div className="flex gap-16 mx-12">
               {renderCalendar(currentDate)}
               {renderCalendar(addMonths(currentDate, 1))}
             </div>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={navigateNext}
-              className="hover:bg-gray-100 rounded-xl hover-lift"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </Button>
+            <div className="fixed right-8 top-1/2 transform -translate-y-1/2 z-10">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={navigateNext}
+                className="hover:bg-gray-100 rounded-xl hover-lift h-12 w-12"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </Button>
+            </div>
           </div>
         </div>
 
