@@ -1,2 +1,2 @@
 # Welcome to your Lovable project
-Demo: omni-cal.netlify.app
+Demo: https://omni-cal.netlify.app/
